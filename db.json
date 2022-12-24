@@ -15,5 +15,25 @@
   ],
   "profile": {
     "name": "typicode"
-  }
+  },
+  "notes": [
+    {
+      "content": "Hellooooo????",
+      "date": "2022-12-24T06:27:49.968Z",
+      "important": false,
+      "id": 1
+    },
+    {
+      "content": "That's kinda wacky",
+      "date": "2022-12-24T06:27:57.013Z",
+      "important": false,
+      "id": 2
+    },
+    {
+      "content": "OKay, queen",
+      "date": "2022-12-24T06:28:35.721Z",
+      "important": true,
+      "id": 3
+    }
+  ]
 }
