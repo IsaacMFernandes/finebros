@@ -1,9 +1,26 @@
 // Import statements
 // like import [name] from [directory/location]
-import './App.css';
-import { useState, useEffect } from 'react';
+import './App.css'
+import { useState, useEffect } from 'react'
 import Note from './components/Note'
+import Notification from './components/Notification'
 import noteService from './services/notes'
+
+// Example component defined with inline styling
+const Footer = () => {
+  // React inline styling uses objects and commas
+  const footerStyle = {
+    color: 'green',
+    fontStyle: 'italic',
+    fontSize: 16
+  }
+  return (
+    <div style={footerStyle}>
+      <br />
+      <em>Note app, Isaac Fernandes, Email varies 2022</em>
+    </div>
+  )
+}
 
 // React component to show button click history
 // Define it with const because it will not be changed
@@ -59,12 +76,16 @@ const App = () => {
     noteService
       .getAll()
       // promise.then() defines the actions to perform when promise is fullfilled
-      .then(response => {
+      .then(initialNotes => {
         // More arrow notation to define what to do with the response
         // In this case, call setNotes function to update notes variable in useState
         // Using response.data, or the json returned from the axios call
-        setNotes(response.data)
+        setNotes(initialNotes)
         console.log("notes have been fetched")
+      })
+      // Catch any possible error from fetching notes
+      .catch(error => {
+        alert("Error: Notes could not be fetched from server.")
       })
   }, [])
 
@@ -100,11 +121,14 @@ const App = () => {
     // Posting to the /notes page via json-server
     noteService
       .create(noteObject)
-      .then(r => {
+      .then(returnedNote => {
         // Settings the notes array and new note var to reflect the change
-        setNotes(notes.concat(noteObject))
+        setNotes(notes.concat(returnedNote))
         setNewNote('')
         console.log("Note posted to server")
+      })
+      .catch(error => {
+        alert("Error: Note could not be added.")
       })
   }
 
@@ -129,8 +153,14 @@ const App = () => {
     // Use note service to replace a note, then change local notes
     noteService
       .update(id, changedNote)
-      .then(response => {
-        setNotes(notes.map(note => note.id !== id ? note : response.data))
+      .then(returnedNote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      })
+      .catch(error => {
+        alert (
+          `Error: the note ${note.content} is unavailable.`
+        )
+        setNotes(notes.filter(note => note.id !== id))
       })
   }
 
@@ -149,6 +179,8 @@ const App = () => {
   // Html form with input that changes and submit button
   return (
     <div className='App-body'>
+      <Notification message={"Hello"} />
+
       {left}
       <Button handleClick={handleLeftClick} text='left' />
       <Button handleClick={handleRightClick} text='right' />
@@ -173,6 +205,8 @@ const App = () => {
         />
         <button type='submit'>save</button>
       </form>
+
+      <Footer />
     </div>
   )
 }
